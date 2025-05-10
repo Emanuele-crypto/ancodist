@@ -8,14 +8,14 @@
     <!-- Aggiungiamo jQuery per compatibilità su più browser -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <style>
-        .cost-breakdown-table,
-        .profit-table {
-            display: none !important; /* Nascondiamo entrambe le tabelle */
+        .cost-breakdown-table {
+            display: none !important; /* Nascondiamo solo la tabella dei costi */
         }
         
-        /* Assicuriamoci che il grafico a torta sia visibile */
-        .chart-container {
-            display: flex !important;
+        /* Assicuriamoci che il grafico a torta e la tabella profitti siano visibili */
+        .chart-container,
+        .profit-table {
+            display: block !important;
         }
         
         .logo-container {
@@ -369,7 +369,30 @@
                 <canvas id="costPieChart" class="pie-chart"></canvas>
             </div>
             
-            <!-- La sezione Analisi profitto è stata rimossa -->
+            <div class="section-title">Analisi profitto</div>
+            
+            <table class="results-table profit-table">
+                <tr>
+                    <th>Parametro</th>
+                    <th>Per litro (€/Lt)</th>
+                    <th>Totale (€)</th>
+                </tr>
+                <tr>
+                    <td>Prezzo di vendita</td>
+                    <td id="sellingPricePerLiter" class="numeric">-</td>
+                    <td id="totalSellingPrice" class="numeric">-</td>
+                </tr>
+                <tr>
+                    <td>Costo produzione</td>
+                    <td id="productionCostPerLiter" class="numeric">-</td>
+                    <td id="totalProductionCost" class="numeric">-</td>
+                </tr>
+                <tr class="highlight">
+                    <td><strong>Profitto</strong></td>
+                    <td id="profitPerLiter" class="numeric">-</td>
+                    <td id="totalProfit" class="numeric">-</td>
+                </tr>
+            </table>
         </div>
             
             <div class="section-title">Analisi profitto</div>
@@ -422,22 +445,22 @@
                 });
             });
             
-            // Nascondi definitivamente entrambe le tabelle, ma assicurati che il grafico sia visibile
+            // Nascondi definitivamente solo la tabella dei costi, ma assicurati che il grafico e la tabella profitti siano visibili
             const costTable = document.querySelector('.cost-breakdown-table');
-            const profitTable = document.querySelector('.profit-table');
-            
             if (costTable) {
                 costTable.style.display = 'none';
             }
             
-            if (profitTable) {
-                profitTable.style.display = 'none';
-            }
-            
-            // Assicurati che il grafico sia visibile
+            // Assicurati che il grafico e la tabella dei profitti siano visibili
             const chartContainer = document.querySelector('.chart-container');
+            const profitTable = document.querySelector('.profit-table');
+            
             if (chartContainer) {
                 chartContainer.style.display = 'flex';
+            }
+            
+            if (profitTable) {
+                profitTable.style.display = 'table';
             }
         });
         
