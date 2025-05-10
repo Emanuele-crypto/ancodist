@@ -8,6 +8,10 @@
     <!-- Aggiungiamo jQuery per compatibilità su più browser -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <style>
+        .cost-breakdown-table {
+            display: none !important; /* Aggiunto !important per forzare il nascondimento */
+        }
+        
         .logo-container {
             display: flex;
             justify-content: center;
@@ -321,7 +325,39 @@
                 </div>
             </div>
             
-            <!-- La tabella delle voci di costo è stata nascosta -->
+            <!-- La tabella delle voci di costo è nascosta con CSS -->
+            <table class="results-table cost-breakdown-table" style="display: none;">
+                <tr>
+                    <th>Voce di costo</th>
+                    <th>Valore (€)</th>
+                    <th>Percentuale</th>
+                </tr>
+                <tr>
+                    <td>Costo gas naturale</td>
+                    <td id="gasCost" class="numeric">-</td>
+                    <td id="gasPercentage" class="numeric">-</td>
+                </tr>
+                <tr>
+                    <td>Costo elettricità</td>
+                    <td id="electricityCost" class="numeric">-</td>
+                    <td id="electricityPercentage" class="numeric">-</td>
+                </tr>
+                <tr>
+                    <td>Costo personale</td>
+                    <td id="laborCost" class="numeric">-</td>
+                    <td id="laborPercentage" class="numeric">-</td>
+                </tr>
+                <tr>
+                    <td>Costo acqua</td>
+                    <td id="waterCost" class="numeric">-</td>
+                    <td id="waterPercentage" class="numeric">-</td>
+                </tr>
+                <tr class="highlight">
+                    <td><strong>Costo totale per lavorazione</strong></td>
+                    <td id="totalCost" class="numeric">-</td>
+                    <td class="numeric">100%</td>
+                </tr>
+            </table>
             
             <div class="chart-container">
                 <canvas id="costPieChart" class="pie-chart"></canvas>
@@ -376,6 +412,12 @@
                     this.style.borderColor = '#ddd';
                 });
             });
+            
+            // Nascondi definitivamente la tabella dei costi
+            const costTable = document.querySelector('.cost-breakdown-table');
+            if (costTable) {
+                costTable.style.display = 'none';
+            }
         });
         
         // Funzione principale di calcolo
