@@ -12,6 +12,12 @@
             display: none !important; /* Aggiunto !important per forzare il nascondimento */
         }
         
+        /* Assicuriamoci che il grafico a torta e la tabella dei profitti siano visibili */
+        .chart-container,
+        .profit-table {
+            display: block !important;
+        }
+        
         .logo-container {
             display: flex;
             justify-content: center;
@@ -365,6 +371,32 @@
             
             <div class="section-title">Analisi profitto</div>
             
+            <table class="results-table profit-table">
+                <tr>
+                    <th>Parametro</th>
+                    <th>Per litro (€/Lt)</th>
+                    <th>Totale (€)</th>
+                </tr>
+                <tr>
+                    <td>Prezzo di vendita</td>
+                    <td id="sellingPricePerLiter" class="numeric">-</td>
+                    <td id="totalSellingPrice" class="numeric">-</td>
+                </tr>
+                <tr>
+                    <td>Costo produzione</td>
+                    <td id="productionCostPerLiter" class="numeric">-</td>
+                    <td id="totalProductionCost" class="numeric">-</td>
+                </tr>
+                <tr class="highlight">
+                    <td><strong>Profitto</strong></td>
+                    <td id="profitPerLiter" class="numeric">-</td>
+                    <td id="totalProfit" class="numeric">-</td>
+                </tr>
+            </table>
+        </div>
+            
+            <div class="section-title">Analisi profitto</div>
+            
             <table class="results-table">
                 <tr>
                     <th>Parametro</th>
@@ -413,10 +445,22 @@
                 });
             });
             
-            // Nascondi definitivamente la tabella dei costi
+            // Nascondi definitivamente la tabella dei costi, ma assicurati che il grafico e la tabella profitti siano visibili
             const costTable = document.querySelector('.cost-breakdown-table');
             if (costTable) {
                 costTable.style.display = 'none';
+            }
+            
+            // Assicurati che il grafico e la tabella dei profitti siano visibili
+            const chartContainer = document.querySelector('.chart-container');
+            const profitTable = document.querySelector('.profit-table');
+            
+            if (chartContainer) {
+                chartContainer.style.display = 'flex';
+            }
+            
+            if (profitTable) {
+                profitTable.style.display = 'table';
             }
         });
         
