@@ -7,15 +7,37 @@
     <title>Analisi dei costi distillato Santoro</title>
     <!-- Aggiungiamo jQuery per compatibilità su più browser -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Meta tag per forzare la ricarica del CSS senza cache -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <style>
-        .cost-breakdown-table {
-            display: none !important; /* Nascondiamo solo la tabella dei costi */
+        /* Stili specifici per nascondere tabelle duplicate */
+        table.cost-breakdown-table,
+        table.results-table:not(.profit-table) {
+            display: none !important;
         }
         
         /* Assicuriamoci che il grafico a torta e la tabella profitti siano visibili */
-        .chart-container,
+        .chart-container {
+            display: flex !important;
+        }
+        
         .profit-table {
-            display: block !important;
+            display: table !important;
+        }
+        
+        /* Stili specifici per dispositivi mobili */
+        @media (max-width: 768px) {
+            table.results-table:not(.profit-table) {
+                display: none !important;
+            }
+            
+            .profit-table {
+                width: 100% !important;
+                display: table !important;
+                margin: 10px 0 !important;
+            }
         }
         
         .logo-container {
@@ -437,7 +459,7 @@
                 input.style.backgroundColor = '#f9f9f9';
                 input.addEventListener('focus', function() {
                     this.style.backgroundColor = '#ffffff';
-                    this.style.borderColor = '#4a90e2';
+                    this.style.borderColor = '#0b5e36';
                 });
                 input.addEventListener('blur', function() {
                     this.style.backgroundColor = '#f9f9f9';
@@ -445,27 +467,84 @@
                 });
             });
             
-            // Nascondi definitivamente solo la tabella dei costi, ma assicurati che il grafico e la tabella profitti siano visibili
-            const costTable = document.querySelector('.cost-breakdown-table');
-            if (costTable) {
-                costTable.style.display = 'none';
-            }
-            
-            // Assicurati che il grafico e la tabella dei profitti siano visibili
-            const chartContainer = document.querySelector('.chart-container');
-            const profitTable = document.querySelector('.profit-table');
-            
-            if (chartContainer) {
-                chartContainer.style.display = 'flex';
-            }
-            
-            if (profitTable) {
-                profitTable.style.display = 'table';
-            }
+            // Rimuove effettivamente dal DOM le tabelle duplicate o nascoste
+            setTimeout(function() {
+                // Identifica e rimuove tabelle duplicate
+                const allTables = document.querySelectorAll('table.results-table');
+                let profitTable = null;
+                
+                // Trova la tabella dei profitti corretta
+                allTables.forEach(table => {
+                    if (table.querySelector('#profitPerLiter') && !profitTable) {
+                        profitTable = table;
+                        table.classList.add('profit-table');
+                        table.style.display = 'table';
+                    }
+                });
+                
+                // Rimuovi tutte le altre tabelle
+                allTables.forEach(table => {
+                    if (table !== profitTable) {
+                        // Rimuovi fisicamente dal DOM invece di nascondere
+                        if (table.parentNode) {
+                            table.parentNode.removeChild(table);
+                        }
+                    }
+                });
+                
+                // Controlla specificamente se ci sono elementi con classe cost-breakdown-table
+                const costTables = document.querySelectorAll('.cost-breakdown-table');
+                costTables.forEach(table => {
+                    if (table.parentNode) {
+                        table.parentNode.removeChild(table);
+                    }
+                });
+                
+                // Nascondi anche qualsiasi altra tabella che potrebbe essere rimasta
+                const remainingTables = document.querySelectorAll('table:not(.profit-table)');
+                remainingTables.forEach(table => {
+                    if (table.parentNode) {
+                        table.parentNode.removeChild(table);
+                    }
+                });
+                
+                // Assicurati che il grafico e la tabella profitti corretta siano visibili
+                if (profitTable) {
+                    profitTable.style.display = 'table';
+                }
+                
+                const chartContainer = document.querySelector('.chart-container');
+                if (chartContainer) {
+                    chartContainer.style.display = 'flex';
+                }
+            }, 100); // Piccolo ritardo per assicurarsi che il DOM sia completamente caricato
         });
         
         // Funzione principale di calcolo
         function calculateResults() {
+            // Prima di tutto, rimuove eventuali tabelle duplicate
+            const allTables = document.querySelectorAll('table.results-table');
+            let profitTable = null;
+            
+            // Trova la tabella dei profitti corretta
+            allTables.forEach(table => {
+                if (table.querySelector('#profitPerLiter')) {
+                    profitTable = table;
+                    table.classList.add('profit-table');
+                    table.style.display = 'table';
+                }
+            });
+            
+            // Rimuovi tutte le altre tabelle
+            allTables.forEach(table => {
+                if (table !== profitTable && table.classList.contains('cost-breakdown-table')) {
+                    // Rimuovi fisicamente dal DOM invece di nascondere
+                    if (table.parentNode) {
+                        table.parentNode.removeChild(table);
+                    }
+                }
+            });
+            
             // Mostra la sezione dei risultati
             document.getElementById('resultsSection').style.display = 'block';
             
